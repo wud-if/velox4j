@@ -41,6 +41,7 @@ public class StreamWindowAggregationNode extends PlanNode {
   private final Integer rowtimeIndex;
   private final Integer windowStart;
   private final Integer windowEnd;
+  private final Boolean isSinglePhase;
 
   @JsonCreator
   public StreamWindowAggregationNode(
@@ -60,7 +61,8 @@ public class StreamWindowAggregationNode extends PlanNode {
       @JsonProperty("isRowTime") boolean isEventTime,
       @JsonProperty("rowtimeIndex") Integer rowtimeIndex,
       @JsonProperty("windowStartIndex") Integer windowStart,
-      @JsonProperty("windowEndIndex") Integer windowEnd) {
+      @JsonProperty("windowEndIndex") Integer windowEnd,
+      @JsonProperty("isSinglePhase") Boolean isSinglePhase) {
     super(id);
     this.aggregation = aggregation;
     this.localAgg = localAgg;
@@ -78,6 +80,46 @@ public class StreamWindowAggregationNode extends PlanNode {
     this.rowtimeIndex = rowtimeIndex;
     this.windowStart = windowStart;
     this.windowEnd = windowEnd;
+    this.isSinglePhase = isSinglePhase;
+  }
+
+  public StreamWindowAggregationNode(
+      String id,
+      PlanNode aggregation,
+      PlanNode localAgg,
+      PartitionFunctionSpec keySelectorSpec,
+      PartitionFunctionSpec sliceAssignerSpec,
+      Long windowInterval,
+      boolean useDayLightSaving,
+      boolean isLocalAgg,
+      Long size,
+      Long step,
+      Long offset,
+      Integer windowType,
+      RowType outputType,
+      boolean isEventTime,
+      Integer rowtimeIndex,
+      Integer windowStart,
+      Integer windowEnd) {
+    this(
+        id,
+        aggregation,
+        localAgg,
+        keySelectorSpec,
+        sliceAssignerSpec,
+        windowInterval,
+        useDayLightSaving,
+        isLocalAgg,
+        size,
+        step,
+        offset,
+        windowType,
+        outputType,
+        isEventTime,
+        rowtimeIndex,
+        windowStart,
+        windowEnd,
+        false);
   }
 
   @JsonGetter("keySelectorSpec")
@@ -158,6 +200,11 @@ public class StreamWindowAggregationNode extends PlanNode {
   @JsonProperty("windowEndIndex")
   public Integer getWindowEnd() {
     return windowEnd;
+  }
+
+  @JsonGetter("isSinglePhase")
+  public boolean getIsSinglePhase() {
+    return isSinglePhase != null && isSinglePhase;
   }
 
   @Override

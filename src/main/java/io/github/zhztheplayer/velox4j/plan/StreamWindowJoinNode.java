@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 
+import io.github.zhztheplayer.velox4j.stateful.KeyedStateSpec;
 import io.github.zhztheplayer.velox4j.type.RowType;
 
 public class StreamWindowJoinNode extends PlanNode {
@@ -30,6 +31,7 @@ public class StreamWindowJoinNode extends PlanNode {
   private final PartitionFunctionSpec leftPartFuncSpec;
   private final PartitionFunctionSpec rightPartFuncSpec;
   private final NestedLoopJoinNode probe;
+  private final KeyedStateSpec keyedStateSpec;
   private final RowType outputType;
   private final int numPartitions;
   private final int leftWindowEndIndex;
@@ -42,6 +44,7 @@ public class StreamWindowJoinNode extends PlanNode {
       PartitionFunctionSpec leftPartFuncSpec,
       PartitionFunctionSpec rightPartFuncSpec,
       NestedLoopJoinNode probe,
+      KeyedStateSpec keyedStateSpec,
       RowType outputType,
       int numPartitions,
       int leftWindowEndIndex,
@@ -51,6 +54,7 @@ public class StreamWindowJoinNode extends PlanNode {
     this.leftPartFuncSpec = leftPartFuncSpec;
     this.rightPartFuncSpec = rightPartFuncSpec;
     this.probe = probe;
+    this.keyedStateSpec = keyedStateSpec;
     this.outputType = outputType;
     this.numPartitions = numPartitions;
     this.leftWindowEndIndex = leftWindowEndIndex;
@@ -64,6 +68,7 @@ public class StreamWindowJoinNode extends PlanNode {
       @JsonProperty("leftPartFuncSpec") PartitionFunctionSpec leftPartFuncSpec,
       @JsonProperty("rightPartFuncSpec") PartitionFunctionSpec rightPartFuncSpec,
       @JsonProperty("probe") NestedLoopJoinNode probe,
+      @JsonProperty("keyedStateSpec") KeyedStateSpec keyedStateSpec,
       @JsonProperty("outputType") RowType outputType,
       @JsonProperty("numPartitions") int numPartitions,
       @JsonProperty("leftWindowEndIndex") int leftWindowEndIndex,
@@ -79,6 +84,7 @@ public class StreamWindowJoinNode extends PlanNode {
         leftPartFuncSpec,
         rightPartFuncSpec,
         probe,
+        keyedStateSpec,
         outputType,
         numPartitions,
         leftWindowEndIndex,
@@ -103,6 +109,11 @@ public class StreamWindowJoinNode extends PlanNode {
   @JsonGetter("probe")
   public NestedLoopJoinNode getProbe() {
     return probe;
+  }
+
+  @JsonGetter("keyedStateSpec")
+  public KeyedStateSpec getKeyedStateSpec() {
+    return keyedStateSpec;
   }
 
   @JsonGetter("outputType")
