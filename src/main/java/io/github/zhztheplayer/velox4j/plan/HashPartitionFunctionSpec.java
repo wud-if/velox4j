@@ -29,13 +29,20 @@ public class HashPartitionFunctionSpec extends PartitionFunctionSpec {
   private final RowType inputType;
   private final List<Integer> keyChannels;
 
-  @JsonCreator
-  public HashPartitionFunctionSpec(
-      @JsonProperty("inputType") RowType inputType,
-      @JsonProperty("keyChannels") List<Integer> keyChannels) {
+  public HashPartitionFunctionSpec(RowType inputType, List<Integer> keyChannels) {
     super();
     this.inputType = inputType;
     this.keyChannels = keyChannels;
+  }
+
+  @JsonCreator
+  private static HashPartitionFunctionSpec create(
+      @JsonProperty("inputType") RowType inputType,
+      @JsonProperty("keyChannels") List<Integer> keyChannels,
+      @JsonProperty("constants") List<TypedExpr> constants) {
+    // "constants" is bound to mirror the C++ reader, which always emits and reads the field;
+    // this spec carries no constant values, so it always round-trips as an empty list.
+    return new HashPartitionFunctionSpec(inputType, keyChannels);
   }
 
   @JsonGetter("inputType")
